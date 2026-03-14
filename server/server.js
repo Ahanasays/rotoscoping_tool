@@ -16,7 +16,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({
   storage: storage,
-  limits: { fileSize: 10 * 1024 * 1024 * 1024 }
+  limits: { fileSize: 5 * 1024 * 1024 * 1024 }
 })
 
 app.post("/upload", upload.single("video"), (req, res) => {
@@ -33,14 +33,18 @@ app.post("/upload", upload.single("video"), (req, res) => {
     }
 
     res.json({
-      message: "Processing complete",
-      output: stdout
+      message: "Processing complete"
     })
   })
 })
 
-app.use("/output", express.static("../outputs"))
+app.get("/download", (req, res) => {
+  res.download(path.join(__dirname, "../outputs/output.webm"))
+})
+
+app.use("/outputs", express.static(path.join(__dirname, "../outputs")))
 
 app.listen(3000, () => {
   console.log("Server running on port 3000")
 })
+
